@@ -1,9 +1,11 @@
 from __future__ import unicode_literals
+
 import sys
 
-from clld.scripts.util import initializedb, Data
 from clld.db.meta import DBSession
 from clld.db.models import common
+from clld.scripts.util import initializedb, Data, add_language_codes
+from pycldf.dataset import Wordlist
 
 import kba
 from kba import models
@@ -11,30 +13,56 @@ from kba import models
 
 def main(args):
     data = Data()
+    cldf_data = Wordlist.from_metadata('data/cldf/cldf-metadata.json')
 
-    dataset = common.Dataset(
-        id=kba.__name__,
-        name="--TODO--",
-        publisher_name="Max Planck Institute for the Science of Human History",
-        publisher_place="Jena",
-        publisher_url="http://www.shh.mpg.de",
-        license="http://creativecommons.org/licenses/by/4.0/",
-        domain='kba.clld.org',
-        jsondata={
-            'license_icon': 'cc-by.png',
-            'license_name': 'Creative Commons Attribution 4.0 International License'})
+    # TODO: Editors/Contributors
+    dataset = common.Dataset(id=kba.__name__, name="--TODO--",
+                             publisher_name="Max Planck Institute for the "
+                                            "Science of Human History",
+                             publisher_place="Jena",
+                             publisher_url="http://www.shh.mpg.de",
+                             license="http://creativecommons.org/licenses/by"
+                                     "/4.0/", domain='kba.clld.org',
+                             jsondata={'license_icon': 'cc-by.png',
+                                       'license_name': 'Creative Commons '
+                                                       'Attribution 4.0 '
+                                                       'International '
+                                                       'License'})
 
     DBSession.add(dataset)
 
-    #
-    # TODO: add editors!
-    #
+    for language in cldf_data['LanguageTable']:
+        lang = data.add(models.KbaLanguage, language['ID'], id=language['ID'],
+                        name=language['Name'])
+        add_language_codes(data, lang, None, glottocode=language['Glottocode'])
+
+    # TODO: Concepticon
+    for parameter in cldf_data['ParameterTable']:
+        data.add(common.Parameter, parameter['ID'], id=parameter['ID'],
+                 name='{0} ({1})'.format(parameter['Name'], parameter['ID']))
+
+    for form in cldf_data['FormTable']:
+        valueset_id = '{0}-{1}'.format(form['Parameter_ID'],
+                                       form['Language_ID'])
+        valueset = data['ValueSet'].get(valueset_id)
+
+        # Unless we already have something in the VS:
+        if not valueset:
+            _ = data.add(common.ValueSet, valueset_id, id=valueset_id,
+                         language=data['KbaLanguage'][form['Language_ID']],
+                         parameter=data['Parameter'][form['Parameter_ID']])
+
+        # TODO: Add word mapping.
+
+        print(args)
+
 
 def prime_cache(args):
     """If data needs to be denormalized for lookup, do that here.
     This procedure should be separate from the db initialization, because
     it will have to be run periodically whenever data has been updated.
     """
+    print(args)
 
 
 if __name__ == '__main__':  # pragma: no cover

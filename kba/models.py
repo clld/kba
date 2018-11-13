@@ -14,12 +14,9 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 from clld import interfaces
 from clld.db.meta import Base, CustomModelMixin
-#from clld.db.models.common import Language
+from clld.db.models.common import Language
 
 
-#-----------------------------------------------------------------------------
-# specialized common mapper classes
-#-----------------------------------------------------------------------------
-#@implementer(interfaces.ILanguage)
-#class kbaLanguage(CustomModelMixin, Language):
-#    pk = Column(Integer, ForeignKey('language.pk'), primary_key=True)
+@implementer(interfaces.ILanguage)
+class KbaLanguage(CustomModelMixin, Language):
+    pk = Column(Integer, ForeignKey('language.pk'), primary_key=True)
