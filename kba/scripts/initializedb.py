@@ -5,6 +5,7 @@ import sys
 from clld.db.meta import DBSession
 from clld.db.models import common
 from clld.scripts.util import initializedb, Data, add_language_codes
+from clld_glottologfamily_plugin.util import load_families
 from pycldf.dataset import Wordlist
 
 import kba
@@ -54,7 +55,10 @@ def main(args):
 
         # TODO: Add word mapping.
 
-        print(args)
+    load_families(data,
+                  [(l.glottocode, l) for l in data['KbaLanguage'].values()],
+                  glottolog_repos=args.data_file('glottolog'),
+                  isolates_icon='tcccccc')
 
 
 def prime_cache(args):
