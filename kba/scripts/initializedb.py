@@ -49,11 +49,13 @@ def main(args):
 
         # Unless we already have something in the VS:
         if not valueset:
-            _ = data.add(common.ValueSet, valueset_id, id=valueset_id,
-                         language=data['KbaLanguage'][form['Language_ID']],
-                         parameter=data['Parameter'][form['Parameter_ID']])
+            vs = data.add(common.ValueSet, valueset_id, id=valueset_id,
+                          language=data['KbaLanguage'][form['Language_ID']],
+                          parameter=data['Parameter'][form['Parameter_ID']])
 
-        # TODO: Add word mapping.
+        DBSession.add(models.Word(id=form['ID'], name=form['Form'],
+                                  comment=form.get('Comment'),
+                                  valueset=vs))
 
     load_families(data,
                   [(l.glottocode, l) for l in data['KbaLanguage'].values()],
