@@ -17,7 +17,7 @@ def main(args):
     cldf_data = Wordlist.from_metadata('data/cldf/cldf-metadata.json')
 
     # TODO: Editors/Contributors
-    dataset = common.Dataset(id=kba.__name__, name="--TODO--",
+    dataset = common.Dataset(id=kba.__name__, name="KBA",
                              publisher_name="Max Planck Institute for the "
                                             "Science of Human History",
                              publisher_place="Jena",
