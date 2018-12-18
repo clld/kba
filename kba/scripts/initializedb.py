@@ -6,13 +6,17 @@ from clld.db.meta import DBSession
 from clld.db.models import common
 from clld.scripts.util import initializedb, Data, add_language_codes
 from clld_glottologfamily_plugin.util import load_families
+from pathlib import Path
 from pycldf.dataset import Wordlist
 
 import kba
 from kba import models
 
+GLOTTOLOG_REPOS = Path(kba.__file__).parent.parent.joinpath('data', 'glottolog')
+
 
 def main(args):
+    _ = args
     data = Data()
     cldf_data = Wordlist.from_metadata('data/cldf/cldf-metadata.json')
 
@@ -59,7 +63,7 @@ def main(args):
 
     load_families(data,
                   [(l.glottocode, l) for l in data['KbaLanguage'].values()],
-                  glottolog_repos=args.data_file('glottolog'),
+                  glottolog_repos=GLOTTOLOG_REPOS,
                   isolates_icon='tcccccc')
 
 
