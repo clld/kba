@@ -20,6 +20,9 @@ def main(args):
     data = Data()
     cldf_data = Wordlist.from_metadata('data/cldf/cldf-metadata.json')
 
+    data.add(common.Contributor, 'fehnannemarie', id='fehnannemarie',
+        name="Anne-Marie Fehn", url="https://shh.mpg.de")
+
     # TODO: Editors/Contributors
     dataset = common.Dataset(id=kba.__name__, name="KBA",
                              publisher_name="Max Planck Institute for the "
@@ -35,6 +38,12 @@ def main(args):
                                                        'License'})
 
     DBSession.add(dataset)
+
+    for i, editor in enumerate(['fehnannemarie']):
+        common.Editor(dataset=dataset, contributor=data['Contributor'][editor],
+                      ord=i + 1)
+
+    contrib = common.Contribution(id='contrib', name='the contribution')
 
     for language in cldf_data['LanguageTable']:
         lang = data.add(models.KbaLanguage, language['ID'], id=language['ID'],
@@ -54,11 +63,12 @@ def main(args):
         # Unless we already have something in the VS:
         if not valueset:
             vs = data.add(common.ValueSet, valueset_id, id=valueset_id,
-                          language=data['KbaLanguage'][form['Language_ID']],
-                          parameter=data['Parameter'][form['Parameter_ID']])
+                        language=data['KbaLanguage'][form['Language_ID']],
+                        parameter=data['Parameter'][form['Parameter_ID']], contribution=contrib)
 
         DBSession.add(models.Word(id=form['ID'], name=form['Form'],
                                   comment=form.get('Comment'),
+                                  originaltranslation=form.get('originaltranslation'),
                                   valueset=vs))
 
     load_families(data,

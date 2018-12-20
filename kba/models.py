@@ -1,6 +1,6 @@
 from clld import interfaces
 from clld.db.meta import CustomModelMixin
-from clld.db.models.common import Language, Value
+from clld.db.models.common import Language, Value, ValueSet
 from sqlalchemy import (Column, Unicode, Integer, ForeignKey, )
 from zope.interface import implementer
 
@@ -13,9 +13,6 @@ class KbaLanguage(CustomModelMixin, Language):
 @implementer(interfaces.IValue)
 class Word(CustomModelMixin, Value):
     pk = Column(Integer, ForeignKey('value.pk'), primary_key=True)
-    # ipa = Column(Unicode)
-    # reference = Column(Unicode)
-    # alternative = Column(Unicode)
     comment = Column(Unicode)
-    # sound = Column(Unicode)
-    # original = Column(Unicode)
+    originaltranslation = Column(Unicode)
+
