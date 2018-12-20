@@ -68,6 +68,11 @@ def main(args):
 
         DBSession.add(models.Word(id=form['ID'], name=form['Form'],
                                   comment=form.get('Comment'),
+                                  sourceorthography=form.get('sourceorthography'),
+                                  kbaorthography=form.get('kbaorthography'),
+                                  wordclass=form.get('wordclass'),
+                                  grammaticalnotes=form.get('grammaticalnotes'),
+                                  idiolectalvariant=form.get('idiolectalvariant'),
                                   originaltranslation=form.get('originaltranslation'),
                                   valueset=vs))
 

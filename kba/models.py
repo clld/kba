@@ -14,5 +14,9 @@ class KbaLanguage(CustomModelMixin, Language):
 class Word(CustomModelMixin, Value):
     pk = Column(Integer, ForeignKey('value.pk'), primary_key=True)
     comment = Column(Unicode)
+    sourceorthography = Column(Unicode)
+    kbaorthography = Column(Unicode)
+    wordclass = Column(Unicode)
+    grammaticalnotes = Column(Unicode)
+    idiolectalvariant = Column(Unicode)
     originaltranslation = Column(Unicode)
-

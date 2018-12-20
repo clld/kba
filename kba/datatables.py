@@ -59,9 +59,14 @@ class KbaValues(DataTable):
                         sTitle=self.req.translate('Parameter'),
                         model_col=Parameter.name,
                         get_object=lambda i: i.valueset.parameter),
-                RefsCol(self, 'source'),
+                # RefsCol(self, 'source'),
+                Col(self, 'source orthography', model_col=Word.sourceorthography),
+                Col(self, 'KBA orthography', model_col=Word.kbaorthography),
+                Col(self, 'Word class', model_col=Word.wordclass),
+                Col(self, 'Grammatical notes', model_col=Word.grammaticalnotes),
+                Col(self, 'Idiolectal variant', model_col=Word.idiolectalvariant),
                 Col(self, 'comment', model_col=Word.comment),
-                Col(self, 'original translation', model_col=Word.originaltranslation)
+                # Col(self, 'original translation', model_col=Word.originaltranslation)
             ]
 
         return res + [
