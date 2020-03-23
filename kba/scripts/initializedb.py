@@ -1,24 +1,18 @@
-from __future__ import unicode_literals
-
 import sys
 
 from clld.db.meta import DBSession
 from clld.db.models import common
 from clld.scripts.util import initializedb, Data, add_language_codes
 from clld_glottologfamily_plugin.util import load_families
-from pathlib import Path
-from pycldf.dataset import Wordlist
 
 import kba
 from kba import models
-
-GLOTTOLOG_REPOS = Path(kba.__file__).parent.parent.joinpath('data', 'glottolog')
 
 
 def main(args):
     _ = args
     data = Data()
-    cldf_data = Wordlist.from_metadata('data/cldf/cldf-metadata.json')
+    cldf_data = args.cldf
 
     data.add(common.Contributor, 'fehnannemarie', id='fehnannemarie',
         name="Anne-Marie Fehn", url="https://shh.mpg.de")
@@ -78,7 +72,7 @@ def main(args):
 
     load_families(data,
                   [(l.glottocode, l) for l in data['KbaLanguage'].values()],
-                  glottolog_repos=GLOTTOLOG_REPOS,
+                  glottolog_repos=args.glottolog,
                   isolates_icon='tcccccc')
 
 
@@ -87,7 +81,6 @@ def prime_cache(args):
     This procedure should be separate from the db initialization, because
     it will have to be run periodically whenever data has been updated.
     """
-    print(args)
 
 
 if __name__ == '__main__':  # pragma: no cover

@@ -18,8 +18,9 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'clld>=4.2.2',
-        'clldmpg',
+        'clld>=6.0',
+        'clldmpg>=3.5',
+        'clld-glottologfamily-plugin',
         'sqlalchemy',
         'waitress',
     ],
@@ -41,7 +42,12 @@ setup(
         ],
     },
     test_suite="kba",
-    entry_points="""\
-    [paste.app_factory]
-    main = kba:main
-""")
+    entry_points={
+        'console_scripts': [
+            'kba-app=kba.__main__:main',
+        ],
+        'paste.app_factory': [
+            'main = kba:main',
+        ],
+    })
+
