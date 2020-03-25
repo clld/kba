@@ -56,7 +56,7 @@ def main(args):
 
         # Unless we already have something in the VS:
         if not valueset:
-            vs = data.add(common.ValueSet, valueset_id, id=valueset_id,
+            valueset = data.add(common.ValueSet, valueset_id, id=valueset_id,
                         language=data['KbaLanguage'][form['Language_ID']],
                         parameter=data['Parameter'][form['Parameter_ID']], contribution=contrib)
 
@@ -68,7 +68,7 @@ def main(args):
                                   grammaticalnotes=form.get('grammaticalnotes'),
                                   idiolectalvariant=form.get('idiolectalvariant'),
                                   originaltranslation=form.get('originaltranslation'),
-                                  valueset=vs))
+                                  valueset=valueset))
 
     load_families(data,
                   [(l.glottocode, l) for l in data['KbaLanguage'].values()],
