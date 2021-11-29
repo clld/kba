@@ -3,7 +3,7 @@ from clld.db.models.common import (Value, ValueSet, Parameter, DomainElement,
 from clld.web.datatables.base import (DataTable, LinkCol, DetailsRowLinkCol,
                                       LinkToMapCol, Col)
 from clld.web.datatables.value import RefsCol, ValueNameCol, ValueSetCol
-from sqlalchemy.orm import joinedload, joinedload_all
+from sqlalchemy.orm import joinedload
 
 from kba.models import Word
 
@@ -14,7 +14,7 @@ class KbaValues(DataTable):
 
     def base_query(self, query):
         query = query.join(ValueSet).options(
-            joinedload_all(Value.valueset, ValueSet.references, ValueSetReference.source)
+            joinedload(Value.valueset).joinedload(ValueSet.references).joinedload(ValueSetReference.source)
         )
 
         if self.language:
